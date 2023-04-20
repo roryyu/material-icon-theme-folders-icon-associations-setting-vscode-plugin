@@ -1,0 +1,1 @@
+# material-icon-theme-folders-icon-associations-setting-vscode-plugin

@@ -9,13 +9,30 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./extension.js",
   "contributes": {
-    "commands": [{
-      "command": "material-icon-theme-folders-icon-associations-setting-vscode-plugin.helloWorld",
-      "title": "Hello World"
-    }]
+    "commands": [
+      {
+        "command": "material-icon-theme-folders-icon-associations-setting-vscode-plugin.helloWorld",
+        "title": "Hello World"
+      },
+      {
+        "command": "material-icon-theme-folders-icon-associations-setting-vscode-plugin.askQuestion",
+        "title": "Set folder icon"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "when": "explorerResourceIsFolder",
+          "command": "material-icon-theme-folders-icon-associations-setting-vscode-plugin.askQuestion",
+          "group": "group1"
+        }
+      ]
+    }
   },
   "scripts": {
     "lint": "eslint .",

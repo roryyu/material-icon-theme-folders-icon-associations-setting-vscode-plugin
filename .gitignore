@@ -1,4 +1,7 @@
 coverage
 node_modules
+.vscode-test/
+*.vsix
 .nyc_output/
 package-lock.json
+.vscod

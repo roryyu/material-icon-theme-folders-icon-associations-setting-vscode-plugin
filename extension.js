@@ -1,7 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
-
+const icons = require('./icons');
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 
@@ -24,11 +24,44 @@ function activate(context) {
 		vscode.window.showInformationMessage('Hello World from !');
 	});
 
+	let isWorkspace = vscode.workspace.workspaceFolders !== undefined;
+	if (isWorkspace) {
+		let wf = vscode.workspace.workspaceFolders[0].uri.path;
+		let f = vscode.workspace.workspaceFolders[0].uri.fsPath;
+		let message = `YOUR-EXTENSION: folder: ${wf} - ${f}`;
+		console.log(message);
+	} else {
+		console.log('not workspace')
+	}
 	context.subscriptions.push(disposable);
+	context.subscriptions.push(
+		vscode.commands.registerCommand("material-icon-theme-folders-icon-associations-setting-vscode-plugin.askQuestion", async (uri) => {
+			console.log(uri.fsPath)
+
+			let items = icons.map(item => {
+				return { label: item, description: '', detail: item }
+			});
+			let answer = await vscode.window.showQuickPick(items);
+			if (isWorkspace && uri.fsPath) {
+				const paths = uri.fsPath.split('/');
+				const currentFolder = paths[paths.length - 1];
+				const config = vscode.workspace.getConfiguration();
+
+				let setting = { [currentFolder]: answer.label };
+				if (config.get('material-icon-theme.folders.associations')) {
+					setting = { ...config.get('material-icon-theme.folders.associations'), ...setting }
+				}
+				config.update('material-icon-theme.folders.associations', setting, vscode.ConfigurationTarget.Workspace).then(() => { vscode.window.showInformationMessage("set success"); });
+			} else {
+				vscode.window.showInformationMessage("set fail")
+			}
+		})
+	)
+
 }
 
 // This method is called when your extension is deactivated
-function deactivate() {}
+function deactivate() { }
 
 module.exports = {
 	activate,
